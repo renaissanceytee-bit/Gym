@@ -26,4 +26,4 @@ If the phone cannot connect, stop Expo with Ctrl+C and run `npm start -- --tunne
 
 ## Launch status
 
-Supabase is planned but not configured; the app currently stores data on the device only. Social features, subscriptions, store signing, and production privacy/security/operations work remain. This development build has not been device-tested and is not ready for public launch or sensitive health data. See [launch readiness](../docs/ASCEND_LAUNCH_READINESS.md).
+Supabase is planned but not configured; the app currently stores data on the device only. Membership checkout and consent-gated ads need the owner’s RevenueCat, App Store/Google Play, and AdMob products/keys and a native development build. Expo Go is for the local preview; native billing and ad requests are inactive there. Social features, store signing, and production privacy/security/operations work remain. This development build has not been device-tested and is not ready for public launch or sensitive health data. See [launch readiness](../docs/ASCEND_LAUNCH_READINESS.md).
