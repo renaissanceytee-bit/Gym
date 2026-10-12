@@ -32,4 +32,4 @@ Before checkout can work, create matching monthly products in App Store Connect 
 
 ## Current status
 
-This repository contains an early local-only development build. The app has not been installed, typechecked, device-tested, or reviewed for public release. It is not production-ready and should not be used for sensitive health information. Store publication and backend setup require the project owner's accounts and configuration.
+This repository contains an early local-only development build. The app has not been installed, typechecked, device-tested, or reviewed for public release. Monetization code is integration-ready but remains inactive without the owner’s store/ad accounts, product setup, keys, and native builds. It is not production-ready and should not be used for sensitive health information. Store publication and backend setup require the project owner's accounts and configuration.
