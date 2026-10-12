@@ -21,7 +21,9 @@
     "expo-secure-store": "~15.0.0",
     "react-native-purchases": "^10.11.0",
     "react-native-google-mobile-ads": "16.5.0",
-    "expo-constants": "~18.0.14"
+    "expo-constants": "~18.0.14",
+    "react-dom": "19.1.0",
+    "react-native-web": "~0.21.0"
   },
   "devDependencies": {
     "@types/react": "~19.1.10",
