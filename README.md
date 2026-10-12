@@ -1,38 +1,27 @@
 # ASCEND
 
-ASCEND is a responsive fitness and self-improvement web prototype. This branch expands the starter dashboard into interactive local-first feature screens.
+ASCEND is a responsive fitness and self-improvement web prototype. The current feature branch expands the original dashboard into interactive, local-first feature screens.
 
 ## Run it
 
-Open `index.html` in a modern browser. It has no build step or package install. Google Fonts are optional; the interface works with local fallback fonts. Browser localStorage stores the demo profile and logs.
+Open `index.html` in a modern browser. No build step or package installation is required. Browser localStorage saves the demo profile and logs. Google Fonts are optional.
 
-## Included in this prototype
+## Included
 
-- Responsive dark dashboard with progress, weekly activity, XP, levels, missions, and recent activity.
-- Workout logging and local history with workout type, duration, and exercise/focus notes.
-- Nutrition meal logging with meal type and optional self-entered protein amount.
-- Habit check-ins, custom habits, streak counts, and daily mission completion.
-- A searchable 300-entry achievement catalog across training, nutrition, habits, and consistency, with five tiers.
-- 90-day journey progress and locally saved weekly reflection.
-- Local summary insights and an Ask My Data preview based on simple recorded counts.
-- Personal challenge preview, privacy preference controls, profile preferences, and data export/delete.
+- Responsive dark dashboard with logged activity, streaks, XP, levels, and Daily Missions.
+- Workout logging with type, duration, focus/exercise notes, local history, and basic training summaries.
+- Meal logging with type and optional self-entered protein, plus meal history.
+- Custom habit check-ins, streak counts, 90-day journey tracking, and saved reflections.
+- Searchable 300-entry achievement catalog covering exercise milestones, training consistency, nutrition, habits, and streaks. Five tiers unlock from starter activity thresholds.
+- Local Ask My Data counts and coach-style summaries.
+- Personal challenge preview, privacy preferences, editable display name/units, local data export, and local data deletion.
 
-## Important: demo versus production
+## Production status
 
-This is a front-end prototype for product exploration. Data is stored in one browser and is not backed up or synced. It is not ready to serve thousands of users or to store sensitive health data.
+This is a front-end prototype, not ready to serve thousands of people. All user data stays in one browser's localStorage; it is not synced or backed up, and browser data can be cleared. Do not store sensitive health data here.
 
-The following require production services and are not live here: authentication and password/phone/email management; secure cloud database and multi-device sync; automatic verified achievement awards; AI coaching; squads, rivals, and global rankings; Stripe billing; notifications; deployment monitoring, backups, and account recovery. Dashboard progress is calculated from local logs and should not be treated as medical advice.
+There is no authentication, password/email/phone account management, cloud database, server-side privacy enforcement, social network, global rankings, AI service, adaptive training engine, Lock-In timer, notification service, or Stripe billing. These require production backend/services, security and privacy design, and further implementation. The ASCEND Score and starter achievement rules are product prototypes, not health measurements or clinically validated guidance.
 
-## Product direction
+## Product direction and launch path
 
-See [the ASCEND product brief](docs/ASCEND_PRODUCT_BRIEF.md) for the broader vision and a staged implementation plan.
-
-## Next steps before a public launch
-
-1. Choose the actual web/mobile target and hosting plan.
-2. Select and configure a secure backend, authentication, database, access controls, and backups.
-3. Replace browser-only persistence with account-scoped server data and migrations.
-4. Define and verify badge rules and scoring against real event data.
-5. Add privacy consent, data deletion/export, monitoring, accessibility review, and recovery flows.
-6. Integrate AI and Stripe server-side with secrets protected; validate payments in test mode.
-7. Run usability, security, and load testing before inviting a large audience.
+See [the ASCEND product brief](docs/ASCEND_PRODUCT_BRIEF.md) for the broader vision. Before a public launch, choose a platform and hosting stack, add account-scoped persistence and access controls, confirm privacy and deletion/export behavior, implement integrations server-side, and complete usability, security, accessibility, backup, monitoring, and load reviews.
