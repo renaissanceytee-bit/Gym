@@ -3,7 +3,7 @@ import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
     shouldShowBanner: true,
     shouldShowList: true
@@ -39,7 +39,6 @@ export async function scheduleWorkoutReminders(days: number[], time: string, pre
         content: {
           title: "A little progress today",
           body: "Your planned workout is here when you are ready.",
-          sound: false
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
