@@ -45,8 +45,8 @@ export function getWeeklyReport(data: AppData, now = new Date()): WeeklyReport {
   };
 }
 
-export function getMomentumScore(report: WeeklyReport): number {
-  const workouts = Math.min(1, report.workouts / 4);
+export function getMomentumScore(report: WeeklyReport, weeklyGoal = 4): number {
+  const workouts = Math.min(1, report.workouts / Math.max(1, weeklyGoal));
   const habits = Math.min(1, report.activeDays / 7);
   const variety = Math.min(1, report.exerciseVariety / 5);
   return Math.round(workouts * 55 + habits * 30 + variety * 15);
