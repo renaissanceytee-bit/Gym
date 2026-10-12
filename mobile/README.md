@@ -1,17 +1,30 @@
 # ASCEND mobile app
 
-This is the native cross-platform starting point for ASCEND, targeting iOS and Android with Expo + React Native + TypeScript. The browser prototype at the repository root remains a design reference.
+ASCEND targets iOS and Android with Expo + React Native + TypeScript. The browser app at the repository root is a visual reference only.
 
-## Preview
+## Run on a phone
 
-1. Install a current Node.js LTS release and the project dependencies with `npm install`.
-2. Run `npm start`.
-3. Open the project in Expo Go on an iOS or Android device, or launch an emulator from the Expo terminal.
+1. Install Node.js LTS and run `npm install` from the repository root.
+2. Copy `.env.example` to `.env`.
+3. Create a Supabase project and set its project URL and public anon key in `.env`.
+4. In Supabase, run `supabase/migrations/0001_initial_schema.sql` in the SQL editor.
+5. Run `npm start`, then scan the Expo QR code using Expo Go on iOS or Android.
 
-## Current scope
+Never put a Supabase service-role key in the mobile app or commit credentials.
 
-The first native slice contains a mobile dashboard, bottom navigation, mission checkboxes, sample progress, recent workouts, and a temporary workout button. State is in memory and resets when the app restarts. No user account, backend, cloud sync, or health data storage is configured yet.
+## Working features
 
-## Next
+- Five native tabs: Today, Train, Fuel, Habits, and Progress.
+- Workout logging with exercise name, sets, reps, weight, duration, and notes.
+- Meal logging with type and optional self-entered protein; delete entries from the log.
+- Custom habits, daily check-ins, streaks, Daily Missions, XP, and levels.
+- 300-entry tiered badge library with local progress criteria and one-time unlock records.
+- 90-day journey summary, weekly reflection, profile name, and unit preference.
+- Local data persists on this device through AsyncStorage.
+- Supabase email sign-up/sign-in UI and persisted auth sessions when credentials are configured.
 
-Build out the native workout and meal flows, habits/streaks, achievement library, settings, accessibility, offline persistence, then add an account-backed API and secure cloud database before a public launch. Create development builds and verify on physical iOS and Android devices before store submission.
+## Not connected yet
+
+Accounts authenticate through Supabase when configured, but workout, meal, habit, badge, and profile records are still stored locally and are not synchronized to Supabase. The initial SQL schema is groundwork only. Cloud CRUD/sync, account deletion, password recovery, device testing, offline conflict handling, push notifications, subscriptions, and production monitoring remain to be implemented and reviewed.
+
+This is an early development build, not ready for public launch or sensitive health data.
