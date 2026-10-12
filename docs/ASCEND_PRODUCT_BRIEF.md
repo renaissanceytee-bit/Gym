@@ -80,14 +80,14 @@ ASCEND is for people who want one place to improve fitness and daily routines. U
 
 ### Phase 0 — Understand and protect the existing project
 
-1. Open the existing repository in Codex and inspect the full tree, README, dependency manifests, app entry points, and current Git state.
+1. Open the existing repository in Codex and inspect the full tree, README, dependency manifests, app entry points, and current Git state. This web prototype is a visual and interaction reference; the product target is mobile-only.
 2. Identify the actual framework, runtime, backend, database, deployment setup, and existing user-facing functionality before choosing architecture.
 3. Record a baseline of what currently works. Do not replace the app or change frameworks just because the stack is unfamiliar.
 4. Create a dedicated feature branch and preserve a clean recovery point before implementation. Keep secrets out of source control.
 
 ### Phase 1 — Define a small MVP
 
-Agree on platform, target user, first-run flow, and the smallest useful launch slice. A reasonable MVP is:
+Agree on iOS/Android targets, target user, first-run flow, and the smallest useful mobile launch slice. A reasonable MVP is:
 
 - Account onboarding and editable goals.
 - Workout logging with exercise history and personal records.
@@ -126,7 +126,7 @@ Choose one complete, dependable user journey before implementing the broader fea
 
 ## Open decisions
 
-- Is ASCEND primarily a mobile app, web app, or both?
+- ASCEND is mobile-only. Decide whether the first release targets iOS, Android, or both.
 - Which users and platform should the MVP serve first?
 - What is the current technology stack and what already works?
 - What visual reference or screens should guide the implementation?
