@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from "react";
-import {Alert,KeyboardAvoidingView,Modal,Platform,SafeAreaView,ScrollView,Share,StatusBar,Text,TextInput,TouchableOpacity,View} from "react-native";
+import {Alert,KeyboardAvoidingView,Modal,Platform,SafeAreaView,ScrollView,Share,StatusBar,StyleSheet,Text,TextInput,TouchableOpacity,View} from "react-native";
 import {StatusBar as ExpoStatusBar} from "expo-status-bar";
 import AuthScreen from "./src/AuthScreen";
 import {supabase,supabaseConfigured} from "./src/supabase";
