@@ -51,9 +51,10 @@ ASCEND is for people who want one place to improve fitness and daily routines. U
 
 ### Coaching and personalization
 
-- Include an AI coach for planning, encouragement, and reflection.
-- Add Ask My Data so users can ask questions about their own logged activity and receive answers tied to their available data.
+- Provide transparent progress summaries grounded in user-entered activity.
+- Include optional weekly reflections and editable, non-AI training guidance.
 - Clearly distinguish recorded facts from estimates or suggestions. Do not invent missing data.
+- Do not include an AI coach or Ask My Data feature.
 - Provide user controls for personalization and data use.
 
 ### Social and challenge features
