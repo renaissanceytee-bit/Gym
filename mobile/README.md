@@ -15,7 +15,9 @@ If the phone cannot connect, stop Expo with Ctrl+C and run `npm start -- --tunne
 ## Included locally
 
 - Five tabs: Today, Train, Fuel, Habits, Progress.
-- Workout and meal logs; habit check-ins, streaks, Daily Missions, XP, and levels.
+- Workout templates and logs; Plus multi-exercise sets, reps, and weights.
+- Meal logs; Pro calorie/macronutrient totals and advanced training metrics.
+- Personal weekly goals and preferred training days; habit check-ins, streaks, Daily Missions, XP, and levels.
 - 300 tiered badges with activity-based progress.
 - Lock-In timer, weekly challenge and recap, rule-based training guidance, and Comeback Mode.
 - 90-day journey, weekly reflection, profile name and units, export, and local data deletion.
