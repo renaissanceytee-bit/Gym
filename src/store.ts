@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export type WorkoutType = "strength" | "cardio" | "mobility";
 export type WorkoutSet = { exercise: string; sets: number; reps: number; weight: number };
-export type Workout = { id: string; name: string; date: string; duration: number; sets: WorkoutSet[]; notes: string; xp: number };
+export type Workout = { id: string; name: string; type: WorkoutType; date: string; duration: number; sets: WorkoutSet[]; notes: string; xp: number };
 export type Meal = { id: string; name: string; type: string; date: string; protein: number; notes: string };
 export type Habit = { id: string; name: string; doneDates: string[] };
 export type AppData = { name: string; xp: number; workouts: Workout[]; meals: Meal[]; habits: Habit[]; missions: Record<string, string[]>; unlockedBadgeIds: string[]; journeyStart: string; reflections: Record<string, string>; units: "lb" | "kg" };
@@ -24,7 +25,7 @@ export async function loadData(): Promise<AppData> {
     const parsed = JSON.parse(raw);
     return {
       ...initialData, ...parsed,
-      workouts: Array.isArray(parsed.workouts) ? parsed.workouts : [],
+      workouts: Array.isArray(parsed.workouts) ? parsed.workouts.map((w: any) => ({ ...w, type: w.type || "strength" })) : [],
       meals: Array.isArray(parsed.meals) ? parsed.meals : [],
       habits: Array.isArray(parsed.habits) ? parsed.habits : initialData.habits,
       missions: parsed.missions || {},
