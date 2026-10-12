@@ -20,7 +20,7 @@ const names: { category: string; icon: string; entries: [string, string, string]
 export const badges: Badge[] = names.flatMap(group => group.entries.flatMap(([name, metric, action]) => tiers.map((threshold, i) => ({
  id: group.category + ":" + name + ":" + i, category: group.category, name,
  tier: ["Bronze", "Silver", "Gold", "Platinum", "Diamond"][i], threshold, metric, icon: group.icon,
- description: name === "First Workout" ? (threshold === 1 ? action : "Complete " + threshold + " workouts") : action + " · " + threshold
+ description: action + " · " + threshold
 }))));
 
 const unique = (values: string[]) => new Set(values.filter(Boolean)).size;
