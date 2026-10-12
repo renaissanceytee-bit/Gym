@@ -5,7 +5,7 @@ export type WorkoutSet = { exercise: string; sets: number; reps: number; weight:
 export type Workout = { id: string; name: string; type: WorkoutType; date: string; duration: number; sets: WorkoutSet[]; notes: string; xp: number };
 export type Meal = { id: string; name: string; type: string; date: string; protein: number; calories: number; carbs: number; fat: number; notes: string };
 export type Habit = { id: string; name: string; doneDates: string[] };
-export type AppData = { name: string; xp: number; workouts: Workout[]; meals: Meal[]; habits: Habit[]; missions: Record<string, string[]>; unlockedBadgeIds: string[]; journeyStart: string; reflections: Record<string, string>; units: "lb" | "kg"; weeklyWorkoutGoal: number; preferredTrainingDays: number[] };
+export type AppData = { name: string; xp: number; workouts: Workout[]; meals: Meal[]; habits: Habit[]; missions: Record<string, string[]>; unlockedBadgeIds: string[]; journeyStart: string; reflections: Record<string, string>; units: "lb" | "kg"; weeklyWorkoutGoal: number; preferredTrainingDays: number[]; trainingReminderDays: number[]; trainingReminderTime: string; trainingReminderIds: string[] };
 export const STORAGE_KEY = "ascend-mobile-v1";
 export const today = () => new Date().toISOString().slice(0, 10);
 export const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -16,7 +16,7 @@ export const initialData: AppData = {
     { id: "water", name: "Drink water", doneDates: [] },
     { id: "sleep", name: "Wind down on time", doneDates: [] }
   ],
-  missions: {}, unlockedBadgeIds: [], journeyStart: today(), reflections: {}, units: "lb", weeklyWorkoutGoal: 4, preferredTrainingDays: []
+  missions: {}, unlockedBadgeIds: [], journeyStart: today(), reflections: {}, units: "lb", weeklyWorkoutGoal: 4, preferredTrainingDays: [], trainingReminderDays: [], trainingReminderTime: "18:00", trainingReminderIds: []
 };
 export async function loadData(): Promise<AppData> {
   try {
@@ -32,7 +32,10 @@ export async function loadData(): Promise<AppData> {
       unlockedBadgeIds: Array.isArray(parsed.unlockedBadgeIds) ? parsed.unlockedBadgeIds : [],
       reflections: parsed.reflections || {},
       weeklyWorkoutGoal: Math.min(14, Math.max(1, Number(parsed.weeklyWorkoutGoal) || 4)),
-      preferredTrainingDays: Array.isArray(parsed.preferredTrainingDays) ? parsed.preferredTrainingDays.filter((n: any) => Number.isInteger(n) && n >= 0 && n <= 6) : []
+      preferredTrainingDays: Array.isArray(parsed.preferredTrainingDays) ? parsed.preferredTrainingDays.filter((n: any) => Number.isInteger(n) && n >= 0 && n <= 6) : [],
+      trainingReminderDays: Array.isArray(parsed.trainingReminderDays) ? parsed.trainingReminderDays.filter((n: any) => Number.isInteger(n) && n >= 0 && n <= 6) : [],
+      trainingReminderTime: typeof parsed.trainingReminderTime === "string" && /^(\d{2}):(\d{2})$/.test(parsed.trainingReminderTime) && Number(parsed.trainingReminderTime.slice(0,2)) <= 23 && Number(parsed.trainingReminderTime.slice(3)) <= 59 ? parsed.trainingReminderTime : initialData.trainingReminderTime,
+      trainingReminderIds: Array.isArray(parsed.trainingReminderIds) ? parsed.trainingReminderIds.filter((id: any) => typeof id === "string") : []
     };
   } catch { return initialData; }
 }

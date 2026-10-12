@@ -24,7 +24,8 @@
     "expo-constants": "~18.0.14",
     "react-dom": "19.1.0",
     "react-native-web": "~0.21.0",
-    "expo-system-ui": "~6.0.9"
+    "expo-system-ui": "~6.0.9",
+    "expo-notifications": "~0.32.17"
   },
   "devDependencies": {
     "@types/react": "~19.1.10",

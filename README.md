@@ -19,6 +19,7 @@ If the QR code cannot connect, stop Expo with Ctrl+C, run `npm start -- --tunnel
 - Meal logging with optional protein for everyone; Pro calorie, protein, carbohydrate, and fat tracking with daily totals.
 - Personalized weekly workout goal and preferred training days; ASCEND Score adjusts to the selected goal.
 - Pro training metrics include estimated weekly volume and the highest recorded exercise weight.
+- Progress calendar, eight-week workout chart, per-exercise logged bests, searchable exercise library, permission-based weekly workout reminders, and JSON backup restore.
 - Custom habits, check-ins, streaks, Daily Missions, XP, and levels.
 - 300 tiered badges with activity-based progress.
 - Lock-In focus timer, weekly workout challenge, activity recap, rule-based training guidance, and Comeback Mode.
