@@ -1,65 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#10110f">
-  <title>ASCEND — Your momentum, in motion</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10110f">
+<title>ASCEND — Your journey, your pace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="app-shell">
-  <aside class="sidebar">
-    <a class="brand" href="#" aria-label="ASCEND home"><span class="brand-mark">A</span><span>ASCEND</span></a>
-    <div class="nav-label">WORKSPACE</div>
-    <nav class="main-nav" aria-label="Main navigation">
-      <button class="nav-item active" data-view="overview"><span class="nav-icon">◫</span>Overview</button>
-      <button class="nav-item" data-view="training"><span class="nav-icon">↗</span>Training</button>
-      <button class="nav-item" data-view="nutrition"><span class="nav-icon">◉</span>Nutrition</button>
-      <button class="nav-item" data-view="habits"><span class="nav-icon">◇</span>Habits</button>
-      <button class="nav-item" data-view="achievements"><span class="nav-icon">✳</span>Achievements<span class="nav-count">4</span></button>
-    </nav>
-    <div class="side-bottom">
-      <div class="side-promo"><div class="promo-orb">✦</div><strong>Small steps.<br>Stronger you.</strong><p>Keep showing up. Your future self is already proud.</p><div class="promo-line"><span></span></div><small>DAY 12 OF YOUR 90-DAY JOURNEY</small></div>
-      <button class="profile-button"><span class="avatar">J</span><span class="profile-copy"><strong>Jordan Lee</strong><small>Level 08 · Builder</small></span><span class="dots">···</span></button>
-    </div>
-  </aside>
-  <main class="main-content">
-    <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><b>/</b><strong id="page-label">Overview</strong></div><div class="top-actions"><span class="live-date" id="today-label"></span><button class="icon-button" aria-label="Notifications">♧<i></i></button><span class="avatar small">J</span></div></header>
-    <div class="page-wrap">
-      <section class="welcome-row"><div><div class="eyebrow"><span class="status-dot"></span> YOUR PERSONAL COMMAND CENTER</div><h1 id="greeting">Good morning, Jordan<span class="sun">✳</span></h1><p class="subhead">A little progress each day adds up to big results.</p></div><button id="start-workout" class="primary-button"><span>＋</span> Start a workout</button></section>
-      <section class="stats-grid" aria-label="Your progress">
-        <article class="stat-card score-card"><div class="stat-head"><span>ASCEND SCORE</span><span class="tiny-icon">↗</span></div><div class="score-layout"><div class="score-ring"><div><strong id="score-value">78</strong><small>/100</small></div></div><div><span class="trend">↗ 6.2%</span><p>vs. last week</p><small class="muted">You're building real momentum.</small></div></div><div class="card-bottom"><span>Consistency</span><span>Strong <b>·</b> Keep it up</span></div></article>
-        <article class="stat-card"><div class="stat-head"><span>THIS WEEK</span><span class="stat-icon lime">↗</span></div><strong class="stat-number"><span id="workout-count">3</span><small> / 4</small></strong><p class="stat-caption">workouts completed</p><div class="week-bars"><i class="done"></i><i class="done"></i><i></i><i class="done"></i><i></i><i></i><i></i></div><div class="card-bottom"><span>Weekly goal</span><span>75% complete</span></div></article>
-        <article class="stat-card"><div class="stat-head"><span>CURRENT STREAK</span><span class="stat-icon orange">✳</span></div><strong class="stat-number"><span id="streak-count">7</span><small> days</small></strong><p class="stat-caption">You're on a roll. Don't stop now.</p><div class="streak-days"><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b><b class="today">S</b></div><div class="card-bottom"><span>Personal best</span><span>14 days</span></div></article>
-        <article class="stat-card xp-card"><div class="stat-head"><span>YOUR MOMENTUM</span><span class="stat-icon purple">✦</span></div><div class="xp-line"><strong><span id="xp-count">1,240</span><small> XP</small></strong><span class="level-tag">LEVEL 08</span></div><p class="stat-caption">260 XP to Level 09 · The Catalyst</p><div class="xp-track"><i></i></div><div class="card-bottom"><span>Next level</span><span>1,500 XP</span></div></article>
-      </section>
-      <section class="content-grid">
-        <article class="panel today-panel"><div class="panel-heading"><div><div class="eyebrow">MAKE TODAY COUNT</div><h2>Today's missions <span class="mission-progress" id="mission-progress">1/3</span></h2></div><button class="text-button" data-view="habits">View all <span>→</span></button></div>
-          <div id="missions" class="mission-list">
-            <label class="mission done"><input type="checkbox" checked><span class="checkmark">✓</span><span class="mission-emoji">🏋️</span><span class="mission-copy"><strong>Move with intention</strong><small>Complete a workout · 30 min</small></span><span class="mission-xp">+50 XP</span></label>
-            <label class="mission"><input type="checkbox"><span class="checkmark"></span><span class="mission-emoji">🥗</span><span class="mission-copy"><strong>Fuel your goals</strong><small>Log 3 balanced meals</small></span><span class="mission-xp">+30 XP</span></label>
-            <label class="mission"><input type="checkbox"><span class="checkmark"></span><span class="mission-emoji">💧</span><span class="mission-copy"><strong>Hydration check</strong><small>Drink 8 glasses of water</small></span><span class="mission-xp">+20 XP</span></label>
-          </div>
-          <div class="mission-footer"><span class="mission-spark">✦</span><span>Complete all missions to earn a <strong>50 XP bonus</strong></span><span class="mission-arrow">↗</span></div>
-        </article>
-        <article class="panel activity-panel"><div class="panel-heading"><div><div class="eyebrow">YOUR CONSISTENCY</div><h2>Weekly activity</h2></div><button class="select-button">This week⌄</button></div>
-          <div class="activity-summary"><div><strong>4.5 <small>hrs</small></strong><span>active time</span></div><div><strong>3</strong><span>workouts</span></div><div><strong>+12%</strong><span>vs last week</span></div></div>
-          <div class="chart"><div class="chart-y"><span>4h</span><span>3h</span><span>2h</span><span>1h</span><span>0</span></div><div class="chart-main"><div class="chart-grid"><i></i><i></i><i></i><i></i><i></i></div><div class="chart-columns"><div><b style="height:36%"></b><small>M</small></div><div><b style="height:71%"></b><small>T</small></div><div><b style="height:0"></b><small>W</small></div><div><b style="height:49%"></b><small>T</small></div><div><b class="today-bar" style="height:83%"></b><small class="active-day">F</small></div><div><b style="height:22%"></b><small>S</small></div><div><b style="height:0"></b><small>S</small></div></div></div></div>
-          <div class="chart-legend"><span><i class="legend-dot"></i>Active time</span><span>Goal: 5 hrs / week</span></div>
-        </article>
-      </section>
-      <section class="lower-grid">
-        <article class="panel workout-panel"><div class="panel-heading"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>Recent training</h2></div><button class="text-button" data-view="training">Training log <span>→</span></button></div><div id="workout-list" class="workout-list"><div class="workout-row"><span class="workout-mark strength">↗</span><span class="workout-info"><strong>Upper body strength</strong><small>Yesterday · 48 min · Chest, Shoulders</small></span><span class="workout-stat">+120 XP</span><span class="row-arrow">›</span></div><div class="workout-row"><span class="workout-mark cardio">⌁</span><span class="workout-info"><strong>Easy recovery run</strong><small>Wednesday · 32 min · 3.2 mi</small></span><span class="workout-stat">+85 XP</span><span class="row-arrow">›</span></div><div class="workout-row"><span class="workout-mark strength">↗</span><span class="workout-info"><strong>Lower body power</strong><small>Monday · 55 min · Legs, Core</small></span><span class="workout-stat">+145 XP</span><span class="row-arrow">›</span></div></div></article>
-        <article class="panel achievements-panel"><div class="panel-heading"><div><div class="eyebrow">MOMENTS THAT MATTER</div><h2>Recent achievements</h2></div><button class="text-button" data-view="achievements">See all <span>→</span></button></div><div class="achievement-list"><div class="achievement-row"><span class="badge badge-gold">✦</span><span><strong>Week One Warrior</strong><small>Complete your first 5 workouts</small></span><em>JUST NOW</em></div><div class="achievement-row"><span class="badge badge-green">↗</span><span><strong>Progress in Motion</strong><small>Beat a personal record</small></span><em>YESTERDAY</em></div><div class="achievement-row"><span class="badge badge-blue">◇</span><span><strong>Finding Your Flow</strong><small>Log 3 days in a row</small></span><em>2 DAYS AGO</em></div></div></article>
-      </section>
-      <footer><span>ASCEND <b>·</b> YOUR JOURNEY, YOUR PACE</span><span>Built on consistency <i>✦</i></span></footer>
-    </div>
-  </main>
-</div>
-<div class="toast" id="toast" role="status"></div>
-<dialog id="workout-dialog"><form method="dialog" id="workout-form"><div class="dialog-top"><div><div class="eyebrow">TRAINING LOG</div><h2>Log a workout</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div><label class="field-label">Workout name<input id="workout-name" required placeholder="e.g. Full body strength"></label><div class="field-row"><label class="field-label">Duration (min)<input id="workout-duration" type="number" min="1" value="45" required></label><label class="field-label">Workout type<select id="workout-type"><option>Strength</option><option>Cardio</option><option>Mobility</option><option>Other</option></select></label></div><label class="field-label">Notes <span class="optional">OPTIONAL</span><textarea id="workout-notes" rows="2" placeholder="How did it feel?"></textarea></label><button class="primary-button full-button" value="default">Save workout <span>→</span></button></form></dialog>
-<script src="app.js"></script>
-</body>
-</html>
+<aside class="sidebar"><a class="brand" href="#" data-view="overview"><span class="brand-mark">A</span><span>ASCEND</span></a><div class="nav-label">YOUR SPACE</div>
+<nav class="main-nav" aria-label="Main navigation">
+<button class="nav-item active" data-view="overview"><span class="nav-icon">◫</span>Overview</button><button class="nav-item" data-view="training"><span class="nav-icon">↗</span>Training</button><button class="nav-item" data-view="nutrition"><span class="nav-icon">◉</span>Nutrition</button><button class="nav-item" data-view="habits"><span class="nav-icon">◇</span>Habits & missions</button><button class="nav-item" data-view="achievements"><span class="nav-icon">✳</span>Achievements<span class="nav-count">300</span><button class="nav-item" data-view="journey"><span class="nav-icon">⌁</span>90-day journey</button><button class="nav-item" data-view="coach"><span class="nav-icon">✦</span>Coach & insights</button><button class="nav-item" data-view="community"><span class="nav-icon">◎</span>Challenges</button>
+</nav><div class="side-bottom"><div class="side-promo"><div class="promo-orb">✦</div><strong>Small steps.<br>Stronger you.</strong><p>Your pace is the right pace. Keep building.</p><div class="promo-line"><span id="journey-progress-side"></span></div><small id="journey-day-side">DAY 1 OF YOUR 90-DAY JOURNEY</small></div><button class="profile-button" data-view="settings"><span class="avatar" id="avatar-letter">J</span><span class="profile-copy"><strong id="profile-name">Jordan Lee</strong><small id="profile-level">Level 01 · Beginner</small></span><span class="dots">···</span></button></div>
+</aside><main class="main-content"><header class="topbar"><div class="breadcrumbs"><span>ASCEND</span><b>/</b><strong id="page-label">Overview</strong></div><div class="top-actions"><span class="live-date" id="today-label"></span><button class="icon-button" id="notification-button" aria-label="Notifications">♧</button><span class="avatar small" id="avatar-letter-top">J</span></div></header><div class="page-wrap"><div id="view-root"></div><footer><span>ASCEND <b>·</b> YOUR JOURNEY, YOUR PACE</span><span>Prototype data is stored on this device <i>✦</i></span></footer></div></main></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="workout-dialog"><form method="dialog" id="workout-form"><div class="dialog-top"><div><div class="eyebrow">TRAINING LOG</div><h2>Log a workout</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div><label class="field-label">Workout name<input id="workout-name" required maxlength="80" placeholder="e.g. Full body strength"></label><div class="field-row"><label class="field-label">Duration (min)<input id="workout-duration" type="number" min="1" max="600" value="45" required></label><label class="field-label">Workout type<select id="workout-type"><option>Strength</option><option>Cardio</option><option>Mobility</option><option>Sports</option><option>Other</option></select></label></div><label class="field-label">Focus / exercises<input id="workout-focus" maxlength="100" placeholder="e.g. Squat, bench press"></label><label class="field-label">Notes <span class="optional">OPTIONAL</span><textarea id="workout-notes" rows="2" maxlength="250" placeholder="How did it feel?"></textarea></label><button class="primary-button full-button" value="default">Save workout <span>→</span></button></form></dialog>
+<dialog id="meal-dialog"><form method="dialog" id="meal-form"><div class="dialog-top"><div><div class="eyebrow">NUTRITION LOG</div><h2>Log a meal</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div><label class="field-label">Meal name<input id="meal-name" required maxlength="80" placeholder="e.g. Greek yogurt and berries"></label><div class="field-row"><label class="field-label">Meal type<select id="meal-type"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></label><label class="field-label">Protein (g)<input id="meal-protein" type="number" min="0" max="500" value="20"></label></div><label class="field-label">Notes <span class="optional">OPTIONAL</span><textarea id="meal-notes" rows="2" maxlength="250" placeholder="Optional meal notes"></textarea></label><button class="primary-button full-button" value="default">Save meal <span>→</span></button></form></dialog>
+<script src="app.js"></script></body></html>
