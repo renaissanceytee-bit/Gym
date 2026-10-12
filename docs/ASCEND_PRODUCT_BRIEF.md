@@ -49,12 +49,12 @@ ASCEND is for people who want one place to improve fitness and daily routines. U
 - Provide weekly reports with workouts, habits, nutrition logging, personal records, and suggested next steps.
 - Build a library of approximately 300 achievements, with tiers where useful. Cover exercise-specific milestones, strength and endurance progress, workout consistency, meal logging, habit streaks, recovery, and personal bests. The library should reward meaningful personal progress and provide accessible milestones for beginners as well as advanced users.
 
-### Coaching and personalization
+### Progress and personalization
 
 - Provide transparent progress summaries grounded in user-entered activity.
-- Include optional weekly reflections and editable, non-AI training guidance.
+- Include optional weekly reflections and editable training guidance.
 - Clearly distinguish recorded facts from estimates or suggestions. Do not invent missing data.
-- Do not include an AI coach or Ask My Data feature.
+- Keep the product free of AI coaching and conversational data-query features, per the user's preference.
 - Provide user controls for personalization and data use.
 
 ### Social and challenge features
