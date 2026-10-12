@@ -15,8 +15,10 @@ If the QR code cannot connect, stop Expo with Ctrl+C, run `npm start -- --tunnel
 ## Included locally
 
 - Today, Train, Fuel, Habits, and Progress tabs.
-- Workout logging with strength/cardio/mobility categories, exercise, sets, reps, weight, duration, and notes.
-- Meal logging with meal types and optional protein estimates.
+- Workout logging with strength/cardio/mobility categories, reusable starter templates, session details, and Plus multi-exercise sets/reps/weight tracking.
+- Meal logging with optional protein for everyone; Pro calorie, protein, carbohydrate, and fat tracking with daily totals.
+- Personalized weekly workout goal and preferred training days; ASCEND Score adjusts to the selected goal.
+- Pro training metrics include estimated weekly volume and the highest recorded exercise weight.
 - Custom habits, check-ins, streaks, Daily Missions, XP, and levels.
 - 300 tiered badges with activity-based progress.
 - Lock-In focus timer, weekly workout challenge, activity recap, rule-based training guidance, and Comeback Mode.
