@@ -1,5 +1,6 @@
-import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { Platform } from "react-native";
+let Purchases: any;
+type PurchasesPackage = any;
 
 export type MembershipState = {
   ready: boolean;
@@ -23,6 +24,7 @@ async function configure(): Promise<boolean> {
   const key = apiKey();
   if (!key || Platform.OS === "web") return false;
   if (!initialized) {
+    Purchases = require("react-native-purchases").default;
     Purchases.configure({ apiKey: key });
     initialized = true;
   }
