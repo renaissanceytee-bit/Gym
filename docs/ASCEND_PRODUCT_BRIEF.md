@@ -87,7 +87,7 @@ ASCEND is for people who want one place to improve fitness and daily routines. U
 
 ### Phase 1 — Define a small MVP
 
-Agree on iOS/Android targets, target user, first-run flow, and the smallest useful mobile launch slice. A reasonable MVP is:
+Agree on the shared iOS/Android experience, target user, first-run flow, and the smallest useful mobile launch slice. A reasonable MVP is:
 
 - Account onboarding and editable goals.
 - Workout logging with exercise history and personal records.
@@ -126,7 +126,7 @@ Choose one complete, dependable user journey before implementing the broader fea
 
 ## Open decisions
 
-- ASCEND is mobile-only. Decide whether the first release targets iOS, Android, or both.
+- ASCEND is mobile-only and launches on both iOS and Android.
 - Which users and platform should the MVP serve first?
 - What is the current technology stack and what already works?
 - What visual reference or screens should guide the implementation?
