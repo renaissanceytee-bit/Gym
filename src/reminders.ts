@@ -14,7 +14,7 @@ export type ReminderResult = { ids: string[]; permissionGranted: boolean };
 export async function scheduleWorkoutReminders(days: number[], time: string, previousIds: string[]): Promise<ReminderResult> {
   const uniqueDays = [...new Set(days)].sort();
   if (uniqueDays.length) {
-    const match = /^(\\d{2}):(\\d{2})$/.exec(time);
+    const match = /^(\d{2}):(\d{2})$/.exec(time);
     if (!match || Number(match[1]) > 23 || Number(match[2]) > 59) throw new Error("Enter a reminder time in 24-hour format, such as 18:30.");
     if (Platform.OS === "android") {
       await Notifications.setNotificationChannelAsync("workout-reminders", {
@@ -28,7 +28,7 @@ export async function scheduleWorkoutReminders(days: number[], time: string, pre
   }
   await Promise.all(previousIds.map(id => Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined)));
   if (!uniqueDays.length) return { ids: [], permissionGranted: true };
-  const match = /^(\\d{2}):(\\d{2})$/.exec(time)!;
+  const match = /^(\d{2}):(\d{2})$/.exec(time)!;
   const ids: string[] = [];
   try {
     for (const day of uniqueDays) {
