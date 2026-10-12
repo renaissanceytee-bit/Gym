@@ -73,7 +73,7 @@ export function badgeCount(metric: string, data: MetricData): number {
  if (metric === "habit-days") return habitDays;
  if (metric === "habit-weeks") return unique(habits.flatMap(h => h.doneDates.map(weekKey)));
  if (metric === "streak") return consecutiveDays(habits.flatMap(h => h.doneDates));
- const missionDays = Object.entries(data.missions || {}).filter(([key]) => /^\\d{4}-\\d{2}-\\d{2}$/.test(key));
+ const missionDays = Object.entries(data.missions || {}).filter(([key]) => /^\d{4}-\d{2}-\d{2}$/.test(key));
  if (metric === "mission-count") return missionDays.reduce((n,[,v]) => n + new Set(v).size, 0);
  if (metric === "journey-days") { const start = new Date(data.journeyStart || new Date().toISOString()); return Math.max(0, Math.floor((Date.now() - start.getTime()) / 86400000) + 1); }
  const activeDates = unique([...workouts.map(w => localDate(w.date)), ...meals.map(m => localDate(m.date)), ...habits.flatMap(h => h.doneDates)]);
