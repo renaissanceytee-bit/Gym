@@ -2,26 +2,20 @@
 
 Mobile-only fitness and self-improvement app targeting **iOS and Android**, built with Expo, React Native, and TypeScript. The root browser prototype is a visual reference; the native app entry point is `App.tsx`.
 
-## Run the mobile app
+## Run the mobile app locally
 
-From the repository root:
+From the repository root, install Node.js LTS and dependencies with `npm install`, then run `npm start`. Scan the Expo QR code with Expo Go on an iOS or Android device.
 
-1. Install dependencies with `npm install`.
-2. Copy `.env.example` to `.env` and add Supabase project URL and anon key.
-3. Apply `supabase/migrations/0001_initial_schema.sql` in the Supabase SQL editor.
-4. Run `npm start`; scan the Expo QR code in Expo Go on an iOS or Android device.
-
-See [mobile/README.md](mobile/README.md) for full setup and implementation status.
-
-## Implemented mobile slice
+## Implemented mobile foundation
 
 - Native Today, Train, Fuel, Habits, and Progress tabs.
-- Local workout, meal, habit, mission, XP/level, journey, reflection, and badge flows.
-- 300 tiered achievements with one-time local unlock rewards.
-- Supabase email sign-up/sign-in screen and persisted auth sessions when configured.
+- Local workout, meal, habit, mission, XP/level, journey, reflection, and profile flows.
+- 300 tiered achievements with exercise-specific starter criteria and one-time unlock rewards.
+- On-device persistence through AsyncStorage.
+- No AI coach or Ask My Data.
 
-## Important status
+## Current stage: local-only
 
-The app currently saves user activity in device-local AsyncStorage. Supabase authentication and a user-scoped database schema are scaffolded, but activity records are **not yet synced to the cloud**. The app is not production-ready for thousands of users. Cloud CRUD/sync, password recovery, account deletion, offline conflict handling, device testing, privacy review, backups, monitoring, and security/load review remain.
+ASCEND is being built local-first for now. Supabase is the planned backend, but no project credentials are configured and cloud sync is not required to use the current app. The optional Supabase scaffold is not connected to this repository’s user data by default.
 
-No AI coach or Ask My Data feature is included.
+This is an early development build. It is not ready for public launch or sensitive health data. Cloud accounts/sync, production security, backups, accessibility and device checks, monitoring, subscriptions, and load testing still require implementation.
