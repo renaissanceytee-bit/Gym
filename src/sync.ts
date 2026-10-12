@@ -1,5 +1,5 @@
 import {supabase,supabaseConfigured} from "./supabase";
-import {AppData,initialData} from "./store";
+import {AppData} from "./store";
 
 export type SyncResult = {data:AppData|null; error:string|null; source:"cloud"|"local"};
 export async function loadOrSeedCloudState(userId:string,localData:AppData):Promise<SyncResult>{
@@ -8,3 +8,9 @@ export async function loadOrSeedCloudState(userId:string,localData:AppData):Prom
  if(read.error)return{data:null,error:read.error.message,source:"local"};
  if(read.data?.payload)return{data:{...localData,...read.data.payload},error:null,source:"cloud"};
  return{data:null,error:null,source:"local"};
+}
+export async function saveCloudState(userId:string,data:AppData):Promise<string|null>{
+ if(!supabaseConfigured||!supabase)return"Supabase is not configured.";
+ const result=await supabase.from("app_state").upsert({user_id:userId,payload:data,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ return result.error?.message||null;
+}
