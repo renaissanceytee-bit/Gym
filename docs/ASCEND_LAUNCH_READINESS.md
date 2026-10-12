@@ -24,6 +24,12 @@ This checklist tracks the gap between the current local development app and a pu
 6. **Set up operational quality.** Add crash reporting with appropriate consent, backups and restore drills, support intake, monitoring, incident response, and a staged rollout plan.
 7. **Validate scale and reliability.** Run security review, accessibility review, performance checks, and load testing against the real backend before inviting thousands of users.
 
+## Billing and ad setup
+
+The app contains RevenueCat purchase/restore wiring for the `ascend_plus` and `ascend_pro` entitlements and product IDs `ascend_plus_monthly` and `ascend_pro_monthly`. Plus is $7.99/month for ad-free use and multi-exercise tracking. Pro is $11.99/month and includes Plus benefits, calorie/macronutrient logging, and additional metrics. Real localized prices are taken from the store products when configured. No purchase is granted locally from a button tap.
+
+Before checkout can work, create matching monthly products in App Store Connect and Google Play Console, configure them in RevenueCat with those entitlement identifiers, and set the public SDK keys and product IDs from `.env.example`. Add AdMob app IDs and banner unit IDs there as well. Ad requests wait for UMP consent; ads do not load when IDs are missing or in Expo Go. Native SDKs require an iOS/Android development or store build after configuration. Store product IDs, credentials, privacy declarations, disclosures, billing restore behavior, and policy compliance still need owner review.
+
 ## Current status
 
 This repository contains an early local-only development build. The app has not been installed, typechecked, device-tested, or reviewed for public release. It is not production-ready and should not be used for sensitive health information. Store publication and backend setup require the project owner's accounts and configuration.
