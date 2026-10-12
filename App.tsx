@@ -2,7 +2,8 @@ import React,{useEffect,useState} from "react";
 import {Alert,KeyboardAvoidingView,Modal,Platform,SafeAreaView,ScrollView,StatusBar,Text,TextInput,TouchableOpacity,View} from "react-native";
 import {StatusBar as ExpoStatusBar} from "expo-status-bar";
 import AuthScreen from "./src/AuthScreen";
-import {supabase,supabaseConfigured} from "./src/supabase";\nimport {loadOrSeedCloudState,saveCloudState} from "./src/sync";
+import {supabase,supabaseConfigured} from "./src/supabase";
+import {loadOrSeedCloudState,saveCloudState} from "./src/sync";
 import {AppData,Workout,Meal,Habit,initialData,loadData,saveData,clearData,today,newId} from "./src/store";
 import {badges,badgeCount} from "./src/badges";
 import {Button,Card,common as c,colors,Heading,Eyebrow,Field} from "./src/ui";
@@ -11,12 +12,15 @@ const tabs:{name:Tab;icon:string}[]=[{name:"Today",icon:"◫"},{name:"Train",ico
 const weekStart=()=>{let d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-6);return d.getTime()};
 const streak=(dates:string[])=>{let n=0,d=new Date();d.setHours(0,0,0,0);while(dates.includes(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1)}if(!n){d=new Date();d.setDate(d.getDate()-1);d.setHours(0,0,0,0);while(dates.includes(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1)}}return n};
 export default function App(){
+ const [session,setSession]=useState<any>(null),[authReady,setAuthReady]=useState(false),[cloudReady,setCloudReady]=useState(false),[syncStatus,setSyncStatus]=useState("Device only");
  const [tab,setTab]=useState<Tab>("Today"),[data,setData]=useState<AppData>(initialData),[loaded,setLoaded]=useState(false),[modal,setModal]=useState<"workout"|"meal"|"habit"|"profile"|null>(null),[search,setSearch]=useState(""),[filter,setFilter]=useState("All");
  const [wName,setWName]=useState(""),[wExercise,setWExercise]=useState(""),[wSets,setWSets]=useState("3"),[wReps,setWReps]=useState("10"),[wWeight,setWWeight]=useState(""),[wDuration,setWDuration]=useState("45"),[wNotes,setWNotes]=useState("");
  const [mName,setMName]=useState(""),[mType,setMType]=useState("Snack"),[mProtein,setMProtein]=useState(""),[mNotes,setMNotes]=useState(""),[hName,setHName]=useState(""),[profileName,setProfileName]=useState("");
  useEffect(()=>{loadData().then(d=>setData(d)).finally(()=>setLoaded(true))},[]);
  useEffect(()=>{if(!supabaseConfigured||!supabase){setAuthReady(true);return}supabase.auth.getSession().then(({data:{session}})=>{setSession(session);setAuthReady(true)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,next)=>setSession(next));return()=>subscription.unsubscribe()},[]);
- useEffect(()=>{if(loaded)saveData(data).catch(()=>Alert.alert("Save failed","Could not save data on this device."))},[data,loaded]);\n useEffect(()=>{if(!loaded)return;if(!session||!supabase){setCloudReady(false);setSyncStatus("Device only");return}let active=true;setCloudReady(false);setSyncStatus("Syncing…");loadOrSeedCloudState(session.user.id,data).then(result=>{if(!active)return;if(result.error){setSyncStatus("Cloud unavailable");Alert.alert("Sync unavailable",result.error);setCloudReady(false);return}if(result.data)setData(result.data);setSyncStatus("Synced");setCloudReady(true)});return()=>{active=false}},[loaded,session?.user?.id]);\n useEffect(()=>{if(!cloudReady||!session)return;const timer=setTimeout(()=>{saveCloudState(session.user.id,data).then(error=>{if(error){setSyncStatus("Sync paused");console.warn("ASCEND cloud sync:",error)}else setSyncStatus("Synced")})},800);return()=>clearTimeout(timer)},[data,cloudReady,session?.user?.id]);
+ useEffect(()=>{if(loaded)saveData(data).catch(()=>Alert.alert("Save failed","Could not save data on this device."))},[data,loaded]);
+ useEffect(()=>{if(!loaded)return;if(!session||!supabase){setCloudReady(false);setSyncStatus("Device only");return}let active=true;setCloudReady(false);setSyncStatus("Syncing…");loadOrSeedCloudState(session.user.id,data).then(result=>{if(!active)return;if(result.error){setSyncStatus("Cloud unavailable");Alert.alert("Sync unavailable",result.error);setCloudReady(false);return}if(result.data)setData(result.data);setSyncStatus("Synced");setCloudReady(true)});return()=>{active=false}},[loaded,session?.user?.id]);
+ useEffect(()=>{if(!cloudReady||!session)return;const timer=setTimeout(()=>{saveCloudState(session.user.id,data).then(error=>{if(error){setSyncStatus("Sync paused");console.warn("ASCEND cloud sync:",error)}else setSyncStatus("Synced")})},800);return()=>clearTimeout(timer)},[data,cloudReady,session?.user?.id]);
  const mutate=(fn:(d:AppData)=>AppData)=>setData(d=>fn(d));
  const workouts=data.workouts,meals=data.meals,habits=data.habits,missions=data.missions[today()]||[];
  const week=workouts.filter(w=>new Date(w.date).getTime()>=weekStart()).length,st=Math.max(0,...habits.map(h=>streak(h.doneDates))),xpToNext=500-data.xp%500;
