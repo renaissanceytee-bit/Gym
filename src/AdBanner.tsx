@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Platform, View } from "react-native";
-import Constants from "expo-constants";
+const Constants = require("expo-constants").default;
 
 type Props = { enabled: boolean };
 
