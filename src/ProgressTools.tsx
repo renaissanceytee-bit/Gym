@@ -11,7 +11,7 @@ const EXERCISES = [
   ["Plank","Core"],["Dead bug","Core"],["Running","Cardio"],["Cycling","Cardio"],["Walking","Cardio"],["Hip mobility","Mobility"],["Shoulder mobility","Mobility"]
 ] as const;
 const dateKey = (d: Date) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const workoutKey = (value: string) => { const d = new Date(value); return Number.isNaN(d.getTime()) ? value.slice(0,10) : dateKey(d); };
+const workoutKey = (value: string) => { const d = (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value) ? new Date(value+"T12:00:00") : new Date(value)); return Number.isNaN(d.getTime()) ? value.slice(0,10) : dateKey(d); };
 const monthTitle = (d: Date) => d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
 function validBackup(value: any): value is AppData {
   return !!value && typeof value === "object" && Array.isArray(value.workouts) && Array.isArray(value.meals) && Array.isArray(value.habits) && typeof value.xp === "number";
@@ -28,13 +28,13 @@ export default function ProgressTools({data,onRestore,onReminderChange}:{data:Ap
   const [month,setMonth]=useState(()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1)});
   const [exerciseQuery,setExerciseQuery]=useState("");
   const [restoreOpen,setRestoreOpen]=useState(false);
-  const [reminderDays,setReminderDays]=useState<number[]>(data.preferredTrainingDays||[]);
+  const [reminderDays,setReminderDays]=useState<number[]>(data.trainingReminderDays||[]);
   const [reminderTime,setReminderTime]=useState(data.trainingReminderTime||"18:00");
   const saveReminders=async()=>{if(reminderDays.length&&!/^(\d{2}):(\d{2})$/.test(reminderTime)){Alert.alert("Check the reminder time","Use 24-hour time, such as 18:30.");return}try{const result=await scheduleWorkoutReminders(reminderDays,reminderTime,data.trainingReminderIds||[]);if(!result.permissionGranted){Alert.alert("Notifications are off","Allow notifications for ASCEND in your device settings, then try again.");return}onReminderChange(reminderDays,reminderTime,result.ids);Alert.alert(reminderDays.length?"Reminders saved":"Reminders turned off",reminderDays.length?"ASCEND will remind you on your selected days.":"Your scheduled ASCEND workout reminders have been canceled.")}catch(error){onReminderChange(reminderDays,reminderTime,[]);Alert.alert("Could not save reminders",error instanceof Error?error.message:"Please try again.")}};
   const workoutDays=useMemo(()=>new Set(data.workouts.map(w=>workoutKey(w.date))),[data.workouts]);
   const monthCells=useMemo(()=>{const first=new Date(month.getFullYear(),month.getMonth(),1);const offset=(first.getDay()+6)%7;const count=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();return [...Array(offset).fill(null),...Array.from({length:count},(_,i)=>i+1)];},[month]);
   const records=useMemo(()=>{const map=new Map<string,{weight:number;reps:number;date:string}>();data.workouts.forEach(w=>w.sets.forEach(set=>{const key=set.exercise.trim().toLowerCase();if(!key)return;const prev=map.get(key);if(!prev||set.weight>prev.weight||(set.weight===prev.weight&&set.reps>prev.reps))map.set(key,{weight:set.weight,reps:set.reps,date:w.date});}));return [...map.entries()].sort((a,b)=>b[1].weight-a[1].weight);},[data.workouts]);
-  const weeks=useMemo(()=>Array.from({length:8},(_,i)=>{const end=new Date();end.setHours(0,0,0,0);end.setDate(end.getDate()-(7-i)*7);const start=new Date(end);start.setDate(start.getDate()-6);const count=data.workouts.filter(w=>{const d=new Date(w.date);return d>=start&&d<=end}).length;return {label:start.toLocaleDateString(undefined,{month:"short",day:"numeric"}),count};}),[data.workouts]);
+  const weeks=useMemo(()=>Array.from({length:8},(_,i)=>{const start=new Date();start.setHours(0,0,0,0);start.setDate(start.getDate()-(55-i*7));const end=new Date(start);end.setDate(end.getDate()+7);const count=data.workouts.filter(w=>{const d=new Date(w.date);return d>=start&&d<end}).length;return {label:start.toLocaleDateString(undefined,{month:"short",day:"numeric"}),count};}),[data.workouts]);
   const maxWeek=Math.max(1,...weeks.map(w=>w.count));
   const filteredExercises=EXERCISES.filter(([name,group])=>(name+" "+group).toLowerCase().includes(exerciseQuery.trim().toLowerCase()));
   const exportBackup=()=>Share.share({title:"ASCEND backup",message:JSON.stringify(data,null,2)});
