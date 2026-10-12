@@ -1,117 +1,43 @@
-import React, { useMemo, useState } from "react";
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-
-type Tab = "Today" | "Train" | "Fuel" | "Progress";
-const lime = "#C4F36B";
-const bg = "#10110F";
-const panel = "#191B17";
-
-function Card({ children, style }: { children: React.ReactNode; style?: object }) {
-  return <View style={[styles.card, style]}>{children}</View>;
+import React,{useEffect,useState} from "react";
+import {Alert,KeyboardAvoidingView,Modal,Platform,SafeAreaView,ScrollView,StatusBar,Text,TextInput,TouchableOpacity,View} from "react-native";
+import {StatusBar as ExpoStatusBar} from "expo-status-bar";
+import {AppData,Workout,Meal,Habit,initialData,loadData,saveData,clearData,today,newId} from "./src/store";
+import {badges,badgeCount} from "./src/badges";
+import {Button,Card,common as c,colors,Heading,Eyebrow,Field} from "./src/ui";
+type Tab="Today"|"Train"|"Fuel"|"Habits"|"Progress";
+const tabs:{name:Tab;icon:string}[]=[{name:"Today",icon:"◫"},{name:"Train",icon:"↗"},{name:"Fuel",icon:"◉"},{name:"Habits",icon:"◇"},{name:"Progress",icon:"✳"}];
+const weekStart=()=>{let d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-6);return d.getTime()};
+const streak=(dates:string[])=>{let n=0,d=new Date();d.setHours(0,0,0,0);while(dates.includes(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1)}if(!n){d=new Date();d.setDate(d.getDate()-1);d.setHours(0,0,0,0);while(dates.includes(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1)}}return n};
+export default function App(){
+ const [tab,setTab]=useState<Tab>("Today"),[data,setData]=useState<AppData>(initialData),[loaded,setLoaded]=useState(false),[modal,setModal]=useState<"workout"|"meal"|"habit"|"profile"|null>(null),[search,setSearch]=useState(""),[filter,setFilter]=useState("All");
+ const [wName,setWName]=useState(""),[wExercise,setWExercise]=useState(""),[wSets,setWSets]=useState("3"),[wReps,setWReps]=useState("10"),[wWeight,setWWeight]=useState(""),[wDuration,setWDuration]=useState("45"),[wNotes,setWNotes]=useState("");
+ const [mName,setMName]=useState(""),[mType,setMType]=useState("Snack"),[mProtein,setMProtein]=useState(""),[mNotes,setMNotes]=useState(""),[hName,setHName]=useState(""),[profileName,setProfileName]=useState("");
+ useEffect(()=>{loadData().then(d=>setData(d)).finally(()=>setLoaded(true))},[]);
+ useEffect(()=>{if(loaded)saveData(data).catch(()=>Alert.alert("Save failed","Could not save data on this device."))},[data,loaded]);
+ const mutate=(fn:(d:AppData)=>AppData)=>setData(d=>fn(d));
+ const workouts=data.workouts,meals=data.meals,habits=data.habits,missions=data.missions[today()]||[];
+ const week=workouts.filter(w=>new Date(w.date).getTime()>=weekStart()).length,st=Math.max(0,...habits.map(h=>streak(h.doneDates))),xpToNext=500-data.xp%500;
+ const metricData={workouts,meals,habits},earned=badges.filter(b=>badgeCount(b.metric,metricData)>=b.threshold);
+ const shown=badges.filter(b=>(filter==="All"||b.category===filter)&&(!search||[b.category,b.name,b.tier].join(" ").toLowerCase().includes(search.toLowerCase())));
+ const toggleMission=(key:string,amount:number)=>mutate(d=>{let m=d.missions[today()]||[],was=m.includes(key),next=was?m.filter(x=>x!==key):[...m,key],add=was?-amount:amount;if(!was&&next.length===3&&!d.missions[today()+"-bonus"]){d.missions[today()+"-bonus"]=["earned"];add+=50}if(was&&d.missions[today()+"-bonus"]){delete d.missions[today()+"-bonus"];add-=50}return {...d,xp:Math.max(0,d.xp+add),missions:{...d.missions,[today()]:next}}});
+ const saveWorkout=()=>{if(!wName.trim()||!wExercise.trim()){Alert.alert("Workout details needed","Enter a name and at least one exercise.");return}let w:Workout={id:newId(),name:wName.trim(),date:new Date().toISOString(),duration:Math.max(1,Number(wDuration)||1),sets:[{exercise:wExercise.trim(),sets:Math.max(1,Number(wSets)||1),reps:Math.max(1,Number(wReps)||1),weight:Math.max(0,Number(wWeight)||0)}],notes:wNotes.trim(),xp:Math.max(25,(Number(wDuration)||1)*2)};mutate(d=>({...d,workouts:[w,...d.workouts],xp:d.xp+w.xp+((d.missions[today()]||[]).includes("workout")?0:50),missions:{...d.missions,[today()]:[...new Set([...(d.missions[today()]||[]),"workout"])]}}));setWName("");setWExercise("");setWNotes("");setWWeight("");setModal(null)};
+ const saveMeal=()=>{if(!mName.trim()){Alert.alert("Meal name needed","Enter a meal or snack name.");return}let m:Meal={id:newId(),name:mName.trim(),type:mType,date:today(),protein:Math.max(0,Number(mProtein)||0),notes:mNotes.trim()};mutate(d=>({...d,meals:[m,...d.meals],xp:d.xp+10+((d.missions[today()]||[]).includes("meal")?0:30),missions:{...d.missions,[today()]:[...new Set([...(d.missions[today()]||[]),"meal"])]}}));setMName("");setMProtein("");setMNotes("");setModal(null)};
+ const addHabit=()=>{if(!hName.trim())return;mutate(d=>({...d,habits:[...d.habits,{id:newId(),name:hName.trim(),doneDates:[]}]}));setHName("");setModal(null)};
+ const toggleHabit=(h:Habit)=>{let done=h.doneDates.includes(today());mutate(d=>({...d,habits:d.habits.map(x=>x.id===h.id?{...x,doneDates:done?x.doneDates.filter(a=>a!==today()):[...x.doneDates,today()]}:x),xp:Math.max(0,d.xp+(done?-15:15)),missions:{...d.missions,[today()]:!done?[...new Set([...(d.missions[today()]||[]),"habit"])]:d.missions[today()]||[]}}))};
+ const profile=()=>{setProfileName(data.name);setModal("profile")};
+ const content=()=>{
+ if(tab==="Today")return <><Eyebrow>YOUR PERSONAL COMMAND CENTER</Eyebrow><Text style={c.title}>Good {new Date().getHours()<12?"morning":new Date().getHours()<17?"afternoon":"evening"}, {data.name}<Text style={{color:colors.lime}}> ✳</Text></Text><Text style={c.subhead}>A little progress each day adds up.</Text><View style={c.stats}><Card style={c.stat}><Eyebrow>THIS WEEK</Eyebrow><Text style={c.statNum}>{week}<Text style={c.unit}> / 4</Text></Text><Text style={c.caption}>workouts logged</Text></Card><Card style={c.stat}><Eyebrow>STREAK</Eyebrow><Text style={c.statNum}>{st}<Text style={c.unit}> days</Text></Text><Text style={c.caption}>current habit streak</Text></Card></View><Card><Heading eyebrow="MAKE TODAY COUNT" title="Daily missions" right={missions.length+"/3"}/>{[["workout","🏋️","Move with intention","Log a workout",50],["meal","🥗","Fuel your goals","Log a meal",30],["habit","◇","Show up for yourself","Complete a habit",20]].map(([k,ico,title,desc,amount])=><TouchableOpacity key={String(k)} onPress={()=>toggleMission(String(k),Number(amount))} style={c.mission}><View style={[c.checkbox,missions.includes(String(k))&&c.checked]}><Text style={c.checkText}>{missions.includes(String(k))?"✓":""}</Text></View><Text style={c.emoji}>{ico}</Text><View style={{flex:1}}><Text style={c.rowTitle}>{title}</Text><Text style={c.caption}>{desc} · +{amount} XP</Text></View></TouchableOpacity>)}<Text style={c.bonus}>✦ Complete all three for a 50 XP bonus</Text></Card><Card><Heading eyebrow="YOUR MOMENTUM" title="Progress this week"/><View style={c.progressRow}><Text style={c.progressBig}>{Math.min(100,week*12+st*2)}</Text><View style={{flex:1}}><Text style={c.rowTitle}>ASCEND Score</Text><Text style={c.caption}>A summary of your recent activity.</Text><View style={c.track}><View style={[c.fill,{width:Math.min(100,week*12+st*2)+"%"}]}/></View></View></View><Text style={c.disclaimer}>Personal progress summary · not a health measure</Text><Text style={c.caption}>{data.xp} XP · Level {Math.floor(data.xp/500)+1} · {xpToNext} XP to next level</Text></Card><Card><Heading eyebrow="PICK UP WHERE YOU LEFT OFF" title="Recent training"/>{workouts.slice(0,3).length?workouts.slice(0,3).map(w=><WorkoutRow key={w.id} w={w}/>):<Text style={c.empty}>Your workout history starts when you log your first session.</Text>}<Button title="＋ Log a workout" onPress={()=>setModal("workout")}/></Card></>;
+ if(tab==="Train")return <><Eyebrow>TRAIN WITH PURPOSE</Eyebrow><Text style={c.title}>Your training</Text><Text style={c.subhead}>Record sessions and build your exercise history.</Text><View style={c.stats}><Card style={c.stat}><Eyebrow>WORKOUTS</Eyebrow><Text style={c.statNum}>{workouts.length}</Text></Card><Card style={c.stat}><Eyebrow>THIS WEEK</Eyebrow><Text style={c.statNum}>{week}</Text></Card></View><Button title="＋ Log a workout" onPress={()=>setModal("workout")}/><Card><Heading eyebrow="YOUR TRAINING LOG" title="Recent workouts"/>{workouts.length?workouts.map(w=><WorkoutRow key={w.id} w={w}/>):<Text style={c.empty}>No workouts yet. Log a session to start your history.</Text>}</Card><Card><Heading eyebrow="EXERCISE MASTERY" title="Practice paths"/>{["Squat","Deadlift","Bench Press","Push-Up","Run","Mobility"].map(x=><View key={x} style={c.badgeRow}><Text style={c.icon}>↗</Text><View style={{flex:1}}><Text style={c.rowTitle}>{x}</Text><Text style={c.caption}>{workouts.filter(w=>w.sets.some(a=>a.exercise.toLowerCase()===x.toLowerCase())).length} logged sessions · Starter</Text></View></View>)}</Card></>;
+ if(tab==="Fuel")return <><Eyebrow>FUEL YOUR GOALS</Eyebrow><Text style={c.title}>Nutrition</Text><Text style={c.subhead}>A judgment-free meal log. Nutrition values are optional.</Text><View style={c.stats}><Card style={c.stat}><Eyebrow>MEALS TODAY</Eyebrow><Text style={c.statNum}>{meals.filter(m=>m.date===today()).length}</Text></Card><Card style={c.stat}><Eyebrow>PROTEIN LOGGED</Eyebrow><Text style={c.statNum}>{meals.filter(m=>m.date===today()).reduce((a,m)=>a+m.protein,0)}<Text style={c.unit}> g</Text></Text></Card></View><Button title="＋ Log a meal" onPress={()=>setModal("meal")}/><Card><Heading eyebrow="TODAY" title="Meal log"/>{meals.filter(m=>m.date===today()).length?meals.filter(m=>m.date===today()).map(m=><MealRow key={m.id} m={m} onDelete={()=>Alert.alert("Delete meal?","Remove this entry?",[{text:"Cancel",style:"cancel"},{text:"Delete",style:"destructive",onPress:()=>mutate(d=>({...d,meals:d.meals.filter(x=>x.id!==m.id)}))}])}/>):<Text style={c.empty}>Nothing logged today. Estimates are optional.</Text>}</Card><Card><Heading eyebrow="ALL ENTRIES" title="Meal history" right={meals.length+" meals"}/>{meals.slice(0,30).map(m=><MealRow key={m.id} m={m} onDelete={()=>mutate(d=>({...d,meals:d.meals.filter(x=>x.id!==m.id)}))}/>)}</Card></>;
+ if(tab==="Habits")return <><Eyebrow>CONSISTENCY OVER PERFECTION</Eyebrow><Text style={c.title}>Habits & missions</Text><Text style={c.subhead}>Missed days don’t erase your progress.</Text><Button title="＋ Add a habit" onPress={()=>setModal("habit")}/><Card><Heading eyebrow="TODAY" title="Your habits"/>{habits.map(h=><TouchableOpacity key={h.id} onPress={()=>toggleHabit(h)} style={c.logRow}><View style={[c.checkbox,h.doneDates.includes(today())&&c.checked]}><Text style={c.checkText}>{h.doneDates.includes(today())?"✓":""}</Text></View><View style={{flex:1}}><Text style={c.rowTitle}>{h.name}</Text><Text style={c.caption}>{streak(h.doneDates)} day streak</Text></View><Text style={c.xp}>✳ {streak(h.doneDates)}</Text></TouchableOpacity>)}</Card><Card><Heading eyebrow="COMEBACK MODE" title="Start small again"/><Text style={c.caption}>A walk, a stretch, or one quick check-in is enough to restart. Your history stays yours.</Text></Card></>;
+ return <><Eyebrow>YOUR PROGRESS, CLEARLY</Eyebrow><Text style={c.title}>Progress & reflection</Text><Text style={c.subhead}>Your activity, milestones, and notes in one place.</Text><View style={c.stats}><Card style={c.stat}><Eyebrow>XP · LEVEL {Math.floor(data.xp/500)+1}</Eyebrow><Text style={c.statNum}>{data.xp}</Text><Text style={c.caption}>{xpToNext} XP to next level</Text></Card><Card style={c.stat}><Eyebrow>BADGES</Eyebrow><Text style={c.statNum}>{earned.length}<Text style={c.unit}> / 300</Text></Text></Card></View><Card><Heading eyebrow="90-DAY JOURNEY" title={"Day "+Math.min(90,Math.max(1,Math.floor((Date.now()-new Date(data.journeyStart).getTime())/86400000)+1))+" of 90"}/><Text style={c.caption}>Build a foundation, find your rhythm, and own your momentum.</Text></Card><Card><Heading eyebrow="WEEKLY REFLECTION" title="What felt good this week?"/><TextInput multiline value={data.reflections?.[today()]||""} onChangeText={v=>mutate(d=>({...d,reflections:{...d.reflections,[today()]:v}}))} placeholder="Write a note to yourself…" placeholderTextColor="#656C60" style={[c.input,{minHeight:78,textAlignVertical:"top"}]}/></Card><Card><Heading eyebrow="ACHIEVEMENTS" title="Badge library" right={earned.length+" earned"}/><TextInput value={search} onChangeText={setSearch} placeholder="Search badges…" placeholderTextColor="#656C60" style={c.input}/><ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginVertical:8}}>{["All","Training","Nutrition","Habits","Consistency"].map(x=><TouchableOpacity key={x} onPress={()=>setFilter(x)} style={[c.filter,filter===x&&c.filterOn]}><Text style={[c.filterText,filter===x&&{color:"#17200F"}]}>{x}</Text></TouchableOpacity>)}</ScrollView>{shown.slice(0,40).map(b=>{let n=badgeCount(b.metric,metricData);return <View key={b.id} style={c.badgeRow}><Text style={c.icon}>{b.icon}</Text><View style={{flex:1}}><Text style={c.rowTitle}>{b.tier} · {b.name}</Text><Text style={c.caption}>{b.description} · {Math.min(n,b.threshold)}/{b.threshold}</Text></View><Text style={c.xp}>{n>=b.threshold?"✓":"·"}</Text></View>})}<Text style={c.caption}>Showing at most 40 results. Search or filter to narrow the catalog.</Text></Card><Card><Heading eyebrow="PROFILE & PRIVACY" title={data.name}/><Text style={c.caption}>Data is stored on this device only; no cloud account or sync is configured.</Text><Button title="Edit profile" secondary onPress={profile}/><Button title="Delete local data" danger onPress={()=>Alert.alert("Delete all local data?","This cannot be undone.",[{text:"Cancel",style:"cancel"},{text:"Delete",style:"destructive",onPress:async()=>{await clearData();setData(initialData)}}])}/><Text style={c.disclaimer}>No AI coach · no Ask My Data · not medical advice</Text></Card></>;
+ };
+ if(!loaded)return <SafeAreaView style={s.safe}><Text style={s.brandText}>ASCEND</Text></SafeAreaView>;
+ return <SafeAreaView style={s.safe}><ExpoStatusBar style="light"/><StatusBar barStyle="light-content" backgroundColor="#10110F"/><View style={s.header}><View style={s.brand}><Text style={s.brandMark}>A</Text><Text style={s.brandText}>ASCEND</Text></View><TouchableOpacity style={s.avatar} accessibilityLabel="Edit profile" onPress={profile}><Text style={s.avatarText}>{data.name[0]?.toUpperCase()}</Text></TouchableOpacity></View><ScrollView key={tab} contentContainerStyle={c.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>{content()}</ScrollView><View style={s.tabBar}>{tabs.map(t=><TouchableOpacity key={t.name} accessibilityRole="tab" accessibilityState={{selected:tab===t.name}} onPress={()=>{setTab(t.name);setSearch("");setFilter("All")}} style={s.tab}><Text style={[s.tabIcon,tab===t.name&&s.active]}>{t.icon}</Text><Text style={[s.tabText,tab===t.name&&s.active]}>{t.name}</Text></TouchableOpacity>)}</View>
+ <Modal transparent animationType="slide" visible={!!modal} onRequestClose={()=>setModal(null)}><KeyboardAvoidingView behavior={Platform.OS==="ios"?"padding":undefined} style={s.backdrop}><View style={s.sheet}><ScrollView keyboardShouldPersistTaps="handled"><View style={s.modalHeader}><Text style={s.h2}>{modal==="workout"?"Log a workout":modal==="meal"?"Log a meal":modal==="habit"?"Add a habit":"Edit profile"}</Text><TouchableOpacity onPress={()=>setModal(null)}><Text style={s.close}>×</Text></TouchableOpacity></View>
+ {modal==="workout"?<><Field label="Workout name" value={wName} onChange={setWName} placeholder="Upper body strength"/><Field label="Exercise" value={wExercise} onChange={setWExercise} placeholder="Squat, bench press…"/><View style={s.row}><Field label="Sets" value={wSets} onChange={setWSets} placeholder="3" keyboardType="numeric"/><Field label="Reps" value={wReps} onChange={setWReps} placeholder="10" keyboardType="numeric"/></View><View style={s.row}><Field label={"Weight ("+data.units+")"} value={wWeight} onChange={setWWeight} placeholder="0" keyboardType="numeric"/><Field label="Duration (min)" value={wDuration} onChange={setWDuration} placeholder="45" keyboardType="numeric"/></View><Field label="Notes" value={wNotes} onChange={setWNotes} placeholder="Optional notes"/><Button title="Save workout" onPress={saveWorkout}/></>:modal==="meal"?<><Field label="Meal or snack" value={mName} onChange={setMName} placeholder="Yogurt and berries"/><Text style={c.eyebrow}>MEAL TYPE</Text><View style={c.choiceRow}>{["Breakfast","Lunch","Dinner","Snack"].map(x=><TouchableOpacity key={x} onPress={()=>setMType(x)} style={[c.filter,mType===x&&c.filterOn]}><Text style={c.filterText}>{x}</Text></TouchableOpacity>)}</View><Field label="Protein (g), optional" value={mProtein} onChange={setMProtein} placeholder="Leave blank if unknown" keyboardType="numeric"/><Field label="Notes" value={mNotes} onChange={setMNotes} placeholder="Optional notes"/><Button title="Save meal" onPress={saveMeal}/></>:modal==="habit"?<><Field label="Habit name" value={hName} onChange={setHName} placeholder="Stretch for five minutes"/><Button title="Add habit" onPress={addHabit}/></>:<><Field label="Display name" value={profileName} onChange={setProfileName} placeholder="Your name"/><View style={c.choiceRow}>{["lb","kg"].map(x=><TouchableOpacity key={x} onPress={()=>mutate(d=>({...d,units:x as "lb"|"kg"}))} style={[c.filter,data.units===x&&c.filterOn]}><Text style={c.filterText}>{x}</Text></TouchableOpacity>)}</View><Text style={c.caption}>Email, password, phone and profile photo need an account system.</Text><Button title="Save profile" onPress={()=>{mutate(d=>({...d,name:profileName.trim()||"Jordan"}));setModal(null)}}/></>}</ScrollView></View></KeyboardAvoidingView></Modal>
+ </SafeAreaView>
 }
-function SectionTitle({ eyebrow, title, action }: { eyebrow: string; title: string; action?: string }) {
-  return <View style={styles.sectionTitle}><View><Text style={styles.eyebrow}>{eyebrow}</Text><Text style={styles.h2}>{title}</Text></View>{action ? <Text style={styles.action}>{action}</Text> : null}</View>;
-}
-
-export default function App() {
-  const [tab, setTab] = useState<Tab>("Today");
-  const [done, setDone] = useState([false, false, false]);
-  const [workouts, setWorkouts] = useState(3);
-  const missionCount = useMemo(() => done.filter(Boolean).length, [done]);
-  const toggle = (i: number) => setDone(current => current.map((v, index) => index === i ? !v : v));
-  const tabs: Tab[] = ["Today", "Train", "Fuel", "Progress"];
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ExpoStatusBar style="light" />
-      <StatusBar barStyle="light-content" backgroundColor={bg} />
-      <View style={styles.header}>
-        <View style={styles.brand}><Text style={styles.brandMark}>A</Text><Text style={styles.brandText}>ASCEND</Text></View>
-        <TouchableOpacity accessibilityLabel="Profile" style={styles.avatar}><Text style={styles.avatarText}>J</Text></TouchableOpacity>
-      </View>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {tab === "Today" ? <>
-          <Text style={styles.eyebrow}>YOUR PERSONAL COMMAND CENTER</Text>
-          <Text style={styles.title}>Good morning, Jordan <Text style={{ color: lime }}>✳</Text></Text>
-          <Text style={styles.subhead}>A little progress each day adds up.</Text>
-          <View style={styles.statRow}>
-            <Card style={styles.stat}><Text style={styles.eyebrow}>THIS WEEK</Text><Text style={styles.statNumber}>{workouts}<Text style={styles.statUnit}> / 4</Text></Text><Text style={styles.caption}>workouts</Text></Card>
-            <Card style={styles.stat}><Text style={styles.eyebrow}>STREAK</Text><Text style={styles.statNumber}>7<Text style={styles.statUnit}> days</Text></Text><Text style={styles.caption}>you’re showing up</Text></Card>
-          </View>
-          <Card>
-            <SectionTitle eyebrow="MAKE TODAY COUNT" title="Daily missions" action={missionCount + "/3"} />
-            {[["🏋️","Move with intention","Log a workout · +50 XP"],["🥗","Fuel your goals","Log a meal · +30 XP"],["◇","Show up for yourself","Complete a habit · +20 XP"]].map((item, i) => (
-              <TouchableOpacity key={item[1]} accessibilityRole="checkbox" accessibilityState={{ checked: done[i] }} onPress={() => toggle(i)} style={styles.mission}>
-                <View style={[styles.checkbox, done[i] && styles.checked]}><Text style={styles.checkText}>{done[i] ? "✓" : ""}</Text></View>
-                <Text style={styles.emoji}>{item[0]}</Text>
-                <View style={{ flex: 1 }}><Text style={styles.missionTitle}>{item[1]}</Text><Text style={styles.caption}>{item[2]}</Text></View>
-              </TouchableOpacity>
-            ))}
-            <Text style={styles.bonus}>✦ Complete all three to earn a 50 XP bonus</Text>
-          </Card>
-          <Card>
-            <SectionTitle eyebrow="YOUR MOMENTUM" title="Progress this week" action="Details →" />
-            <View style={styles.progressRow}><Text style={styles.progressBig}>78</Text><View style={{ flex: 1 }}><Text style={styles.missionTitle}>ASCEND Score</Text><Text style={styles.caption}>A reflection of your recent consistency.</Text><View style={styles.progressTrack}><View style={[styles.progressFill, { width: "78%" }]} /></View></View></View>
-            <Text style={styles.disclaimer}>Personal progress summary · not a health measure</Text>
-          </Card>
-          <Card>
-            <SectionTitle eyebrow="PICK UP WHERE YOU LEFT OFF" title="Recent training" action="See all →" />
-            <View style={styles.workout}><Text style={styles.workoutIcon}>↗</Text><View><Text style={styles.missionTitle}>Upper body strength</Text><Text style={styles.caption}>Yesterday · 48 min</Text></View><Text style={styles.xp}>+120 XP</Text></View>
-            <View style={styles.workout}><Text style={styles.workoutIcon}>⌁</Text><View><Text style={styles.missionTitle}>Easy recovery run</Text><Text style={styles.caption}>Wednesday · 32 min</Text></View><Text style={styles.xp}>+85 XP</Text></View>
-          </Card>
-          <TouchableOpacity style={styles.startButton} onPress={() => setWorkouts(n => n + 1)}><Text style={styles.startText}>＋  Log a workout</Text></TouchableOpacity>
-          <Text style={styles.demoNote}>EARLY MOBILE PREVIEW · DATA IS TEMPORARY</Text>
-        </> : <View style={styles.placeholder}><Text style={styles.eyebrow}>{tab.toUpperCase()}</Text><Text style={styles.title}>{tab === "Train" ? "Your training" : tab === "Fuel" ? "Nutrition" : "Progress & reflection"}</Text><Text style={styles.subhead}>This mobile section is the next build step. Your design reference is ready.</Text><TouchableOpacity style={styles.startButton} onPress={() => setTab("Today")}><Text style={styles.startText}>Back to Today</Text></TouchableOpacity></View>}
-      </ScrollView>
-      <View style={styles.tabBar}>{tabs.map(t => <TouchableOpacity key={t} onPress={() => setTab(t)} style={styles.tab}><Text style={[styles.tabIcon, tab === t && styles.tabActive]}>{t === "Today" ? "◫" : t === "Train" ? "↗" : t === "Fuel" ? "◉" : "✳"}</Text><Text style={[styles.tabText, tab === t && styles.tabActive]}>{t}</Text></TouchableOpacity>)}</View>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: bg },
-  header: { height: 58, paddingHorizontal: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#282B26" },
-  brand: { flexDirection: "row", alignItems: "center", gap: 9 },
-  brandMark: { width: 27, height: 27, borderRadius: 8, backgroundColor: lime, color: "#17200F", textAlign: "center", textAlignVertical: "center", overflow: "hidden", fontWeight: "900", fontSize: 16 },
-  brandText: { color: "#F2F3ED", fontSize: 13, fontWeight: "800", letterSpacing: 2.2 },
-  avatar: { width: 31, height: 31, borderRadius: 18, backgroundColor: "#4A5044", alignItems: "center", justifyContent: "center" },
-  avatarText: { color: "#FFF", fontWeight: "700" },
-  content: { padding: 20, paddingBottom: 32, gap: 14 },
-  eyebrow: { color: "#969C8E", fontSize: 9, letterSpacing: 1.1, fontWeight: "700" },
-  title: { color: "#F2F3ED", fontSize: 25, lineHeight: 32, fontWeight: "800", letterSpacing: -0.7, marginTop: 8 },
-  subhead: { color: "#999F92", fontSize: 12, lineHeight: 18, marginTop: 5, marginBottom: 2 },
-  card: { backgroundColor: panel, borderWidth: 1, borderColor: "#2B2E28", borderRadius: 12, padding: 15, marginTop: 2 },
-  statRow: { flexDirection: "row", gap: 10 },
-  stat: { flex: 1, minHeight: 104, justifyContent: "center" },
-  statNumber: { color: "#F4F6EF", fontSize: 27, fontWeight: "800", marginTop: 9 },
-  statUnit: { color: "#9CA292", fontSize: 12, fontWeight: "500" },
-  caption: { color: "#899083", fontSize: 10, lineHeight: 15, marginTop: 3 },
-  sectionTitle: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
-  h2: { color: "#F1F3EC", fontSize: 15, fontWeight: "700", marginTop: 4 },
-  action: { color: lime, fontSize: 10, fontWeight: "700" },
-  mission: { minHeight: 57, borderBottomWidth: 1, borderBottomColor: "#292C26", flexDirection: "row", alignItems: "center", gap: 10 },
-  checkbox: { width: 18, height: 18, borderWidth: 1, borderColor: "#59604F", borderRadius: 5, alignItems: "center", justifyContent: "center" },
-  checked: { backgroundColor: lime, borderColor: lime },
-  checkText: { color: "#18200F", fontSize: 11, fontWeight: "900" },
-  emoji: { width: 24, textAlign: "center", fontSize: 16 },
-  missionTitle: { color: "#E9EBE3", fontSize: 11, fontWeight: "600" },
-  bonus: { color: "#B8C4A8", fontSize: 9, backgroundColor: "#22281B", borderRadius: 7, padding: 10, marginTop: 11 },
-  progressRow: { flexDirection: "row", alignItems: "center", gap: 14, marginTop: 6 },
-  progressBig: { color: lime, fontSize: 42, fontWeight: "800" },
-  progressTrack: { height: 4, backgroundColor: "#34392E", borderRadius: 4, marginTop: 9, overflow: "hidden" },
-  progressFill: { height: "100%", backgroundColor: lime },
-  disclaimer: { color: "#767D70", fontSize: 8, marginTop: 12 },
-  workout: { minHeight: 54, flexDirection: "row", alignItems: "center", gap: 10, borderTopWidth: 1, borderTopColor: "#292C26" },
-  workoutIcon: { width: 28, height: 28, borderRadius: 7, textAlign: "center", textAlignVertical: "center", overflow: "hidden", color: lime, backgroundColor: "#2A3020", fontSize: 16 },
-  xp: { color: "#BCC5AF", fontSize: 9, marginLeft: "auto" },
-  startButton: { minHeight: 48, borderRadius: 9, backgroundColor: lime, justifyContent: "center", alignItems: "center", marginTop: 2 },
-  startText: { color: "#17200F", fontSize: 12, fontWeight: "800" },
-  demoNote: { color: "#636A5E", fontSize: 8, letterSpacing: 1, textAlign: "center", marginTop: 4 },
-  placeholder: { minHeight: 380, justifyContent: "center", gap: 10 },
-  tabBar: { height: 66, borderTopWidth: 1, borderTopColor: "#282B26", backgroundColor: "#141512", flexDirection: "row", justifyContent: "space-around", alignItems: "center", paddingBottom: 4 },
-  tab: { flex: 1, alignItems: "center", gap: 3 },
-  tabIcon: { color: "#8C9286", fontSize: 17 },
-  tabText: { color: "#8C9286", fontSize: 9, fontWeight: "600" },
-  tabActive: { color: lime }
-});
+function WorkoutRow({w}:{w:Workout}){return <View style={c.logRow}><Text style={c.icon}>↗</Text><View style={{flex:1}}><Text style={c.rowTitle}>{w.name}</Text><Text style={c.caption}>{new Date(w.date).toLocaleDateString()} · {w.duration} min</Text>{w.sets.map((a,i)=><Text key={i} style={c.caption}>{a.exercise}: {a.sets} × {a.reps}{a.weight?" @ "+a.weight:""}</Text>)}</View><Text style={c.xp}>+{w.xp} XP</Text></View>}
+function MealRow({m,onDelete}:{m:Meal;onDelete:()=>void}){return <View style={c.logRow}><Text style={c.icon}>◉</Text><View style={{flex:1}}><Text style={c.rowTitle}>{m.name}</Text><Text style={c.caption}>{m.type}{m.protein?" · "+m.protein+"g protein":""} · {m.date}</Text></View><TouchableOpacity onPress={onDelete}><Text style={s.close}>×</Text></TouchableOpacity></View>}
+const s=StyleSheet.create({safe:{flex:1,backgroundColor:"#10110F"},header:{height:56,paddingHorizontal:18,flexDirection:"row",justifyContent:"space-between",alignItems:"center",borderBottomWidth:1,borderBottomColor:"#282B26"},brand:{flexDirection:"row",alignItems:"center",gap:9},brandMark:{width:27,height:27,borderRadius:8,backgroundColor:"#C4F36B",color:"#17200F",textAlign:"center",textAlignVertical:"center",overflow:"hidden",fontWeight:"900",fontSize:16},brandText:{color:"#F2F3ED",fontSize:13,fontWeight:"800",letterSpacing:2.2},avatar:{width:31,height:31,borderRadius:18,backgroundColor:"#4A5044",alignItems:"center",justifyContent:"center"},avatarText:{color:"#FFF",fontWeight:"700"},tabBar:{height:64,borderTopWidth:1,borderTopColor:"#282B26",backgroundColor:"#141512",flexDirection:"row",alignItems:"center",paddingBottom:3},tab:{flex:1,alignItems:"center",gap:3},tabIcon:{color:"#8C9286",fontSize:17},tabText:{color:"#8C9286",fontSize:9,fontWeight:"600"},active:{color:"#C4F36B"},backdrop:{flex:1,justifyContent:"flex-end",backgroundColor:"#0009"},sheet:{maxHeight:"90%",backgroundColor:"#191B17",borderTopLeftRadius:18,borderTopRightRadius:18,padding:18,paddingBottom:28,borderWidth:1,borderColor:"#393D34"},modalHeader:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginBottom:8},h2:{color:"#F1F3EC",fontSize:15,fontWeight:"700"},close:{color:"#FF9E91",fontSize:23,paddingHorizontal:7},row:{flexDirection:"row",gap:9}});
