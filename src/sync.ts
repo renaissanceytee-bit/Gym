@@ -6,11 +6,12 @@ export async function loadOrSeedCloudState(userId:string,localData:AppData):Prom
  if(!supabaseConfigured||!supabase)return{data:null,error:"Supabase is not configured.",source:"local"};
  const read=await supabase.from("app_state").select("payload").eq("user_id",userId).maybeSingle();
  if(read.error)return{data:null,error:read.error.message,source:"local"};
- if(read.data?.payload)return{data:{...localData,...read.data.payload},error:null,source:"cloud"};
+ if(read.data?.payload)return{data:{...localData,...read.data.payload,trainingReminderIds:localData.trainingReminderIds||[]},error:null,source:"cloud"};
  return{data:null,error:null,source:"local"};
 }
 export async function saveCloudState(userId:string,data:AppData):Promise<string|null>{
  if(!supabaseConfigured||!supabase)return"Supabase is not configured.";
- const result=await supabase.from("app_state").upsert({user_id:userId,payload:data,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ const {trainingReminderIds:_deviceReminderIds,...cloudData}=data;
+ const result=await supabase.from("app_state").upsert({user_id:userId,payload:cloudData,updated_at:new Date().toISOString()},{onConflict:"user_id"});
  return result.error?.message||null;
 }
