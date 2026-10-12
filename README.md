@@ -1,33 +1,27 @@
 # ASCEND
 
-ASCEND is a mobile-only fitness and self-improvement app targeting **iOS and Android**. This repository contains a native Expo + React Native + TypeScript starter in `App.tsx`; the browser UI at the root is a separate visual reference.
+Mobile-only fitness and self-improvement app targeting **iOS and Android**, built with Expo, React Native, and TypeScript. The root browser prototype is a visual reference; the native app entry point is `App.tsx`.
 
-## Preview the mobile app
+## Run the mobile app
 
-1. Install Node.js and project dependencies with `npm install`.
-2. Start Expo with `npm start`.
-3. Scan the QR code in Expo Go on an iOS or Android device, or launch a configured simulator/emulator.
+From the repository root:
 
-See [mobile/README.md](mobile/README.md) for setup and current scope.
+1. Install dependencies with `npm install`.
+2. Copy `.env.example` to `.env` and add Supabase project URL and anon key.
+3. Apply `supabase/migrations/0001_initial_schema.sql` in the Supabase SQL editor.
+4. Run `npm start`; scan the Expo QR code in Expo Go on an iOS or Android device.
 
-## Current mobile slice
+See [mobile/README.md](mobile/README.md) for full setup and implementation status.
 
-- Native dark dashboard and bottom navigation.
-- Daily mission checkboxes and sample progress cards.
-- Recent workout preview and temporary workout action.
+## Implemented mobile slice
 
-The current native screen uses sample data stored only in memory. It resets when the app restarts. The browser prototype is still available at the root for reference.
+- Native Today, Train, Fuel, Habits, and Progress tabs.
+- Local workout, meal, habit, mission, XP/level, journey, reflection, and badge flows.
+- 300 tiered achievements with one-time local unlock rewards.
+- Supabase email sign-up/sign-in screen and persisted auth sessions when configured.
 
-## Product decisions
+## Important status
 
-- Mobile only, launching on both iOS and Android.
-- No AI coach and no Ask My Data.
-- Dark premium visual direction with training, nutrition, habits, streaks, tiered achievements, progress, and 90-day journey features.
+The app currently saves user activity in device-local AsyncStorage. Supabase authentication and a user-scoped database schema are scaffolded, but activity records are **not yet synced to the cloud**. The app is not production-ready for thousands of users. Cloud CRUD/sync, password recovery, account deletion, offline conflict handling, device testing, privacy review, backups, monitoring, and security/load review remain.
 
-## Production status
-
-This is an early mobile starter, not ready for public use. It has no account system, cloud data, secure persistence, backups, real workout/nutrition flows, push notifications, social backend, or billing. Do not use it to store sensitive health data.
-
-Before a launch for a large audience, build account-scoped cloud storage, privacy and recovery controls, offline-safe sync, server-side validation, monitoring, accessibility and device coverage, and security/load reviews.
-
-See [the product brief](docs/ASCEND_PRODUCT_BRIEF.md) for the full feature plan.
+No AI coach or Ask My Data feature is included.
