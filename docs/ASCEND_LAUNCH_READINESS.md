@@ -5,7 +5,9 @@ This checklist tracks the gap between the current local development app and a pu
 ## Working in the local app
 
 - Today, Train, Fuel, Habits, and Progress tabs.
-- Device-local workouts, meals, habit check-ins, missions, XP, levels, and reflections.
+- Device-local workouts, meals, habit check-ins, missions, XP, levels, and reflections. Older saved meals are migrated with zero calorie/macro values.
+- Starter workout templates, multiple exercise rows (Plus gated), editable weekly goal and preferred training days.
+- Pro calorie/macronutrient entry and daily totals; estimated weekly training volume and top logged exercise weight.
 - 300 tiered achievement entries with activity-based progress.
 - Lock-In focus timer, weekly challenge, weekly activity recap, and rule-based training guidance.
 - Comeback Mode opens a prefilled low-intensity session for the user to adjust.
