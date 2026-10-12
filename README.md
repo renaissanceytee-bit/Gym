@@ -13,7 +13,7 @@ Open `index.html` in a modern browser. No build step or package installation is 
 - Meal logging with type and optional self-entered protein, plus meal history.
 - Custom habit check-ins, streak counts, 90-day journey tracking, and saved reflections.
 - Searchable 300-entry achievement catalog covering exercise milestones, training consistency, nutrition, habits, and streaks. Five tiers unlock from starter activity thresholds.
-- Local Ask My Data counts and coach-style summaries.
+- Local progress summaries and saved weekly reflections; no AI coach or Ask My Data.
 - Personal challenge preview, privacy preferences, editable display name/units, local data export, and local data deletion.
 
 ## Production status
