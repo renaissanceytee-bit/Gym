@@ -10,10 +10,11 @@ export const badges: Badge[] = families.flatMap(f => f.names.flatMap(name => [1,
  id: f.category + ":" + name + ":" + i, category:f.category, name,
  tier:["Bronze","Silver","Gold","Platinum","Diamond"][i], threshold,
  metric:name === "First Workout" ? "workouts" : f.metric === "exercise" ? "exercise:" + name.toLowerCase() : f.metric, icon:f.icon,
- description:`Reach ${threshold} ${f.metric === "workouts" ? "workouts" : f.metric === "meals" ? "meal logs" : f.metric === "habits" ? "habit check-ins" : "streak days"}`
+ description:name==="First Workout"?"Complete your first workout":f.metric==="exercise"?`Log ${threshold} ${name} sessions`:`Reach ${threshold} ${f.metric === "workouts" ? "workouts" : f.metric === "meals" ? "meal logs" : f.metric === "habits" ? "habit check-ins" : "streak days"}`
 }))));
 export function badgeCount(metric: string, data: {workouts:any[];meals:any[];habits:{doneDates:string[]}[]}) {
- if(metric==="workouts") return data.workouts.length;\n if(metric.startsWith("exercise:")) { const exercise=metric.slice(9); return data.workouts.reduce((n,w)=>n+(w.sets||[]).filter((set:any)=>String(set.exercise).trim().toLowerCase()===exercise).length,0); }
+ if(metric==="workouts") return data.workouts.length;
+ if(metric.startsWith("exercise:")) { const exercise=metric.slice(9); return data.workouts.reduce((n,w)=>n+(w.sets||[]).filter((set:any)=>String(set.exercise).trim().toLowerCase()===exercise).length,0); }
  if(metric==="meals") return data.meals.length;
  if(metric==="habits") return data.habits.reduce((n,h)=>n+h.doneDates.length,0);
  const dates=data.habits.flatMap(h=>h.doneDates);
