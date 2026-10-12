@@ -24,9 +24,13 @@ async function configure(): Promise<boolean> {
   const key = apiKey();
   if (!key || Platform.OS === "web") return false;
   if (!initialized) {
-    Purchases = require("react-native-purchases").default;
-    Purchases.configure({ apiKey: key });
-    initialized = true;
+    try {
+      Purchases = require("react-native-purchases").default;
+      Purchases.configure({ apiKey: key });
+      initialized = true;
+    } catch {
+      return false;
+    }
   }
   return true;
 }
