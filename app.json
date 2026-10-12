@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "ASCEND",
+    "slug": "ascend-fitness",
+    "scheme": "ascend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ascend.fitness"
+    },
+    "android": {
+      "package": "com.ascend.fitness",
+      "adaptiveIcon": {
+        "backgroundColor": "#10110F"
+      }
+    }
+  }
+}
