@@ -33,7 +33,7 @@ export async function loadData(): Promise<AppData> {
       reflections: parsed.reflections || {},
       weeklyWorkoutGoal: Math.min(14, Math.max(1, Number(parsed.weeklyWorkoutGoal) || 4)),
       preferredTrainingDays: Array.isArray(parsed.preferredTrainingDays) ? parsed.preferredTrainingDays.filter((n: any) => Number.isInteger(n) && n >= 0 && n <= 6) : [],
-      trainingReminderTime: typeof parsed.trainingReminderTime === "string" && /^(\\d{2}):(\\d{2})$/.test(parsed.trainingReminderTime) ? parsed.trainingReminderTime : initialData.trainingReminderTime,
+      trainingReminderTime: typeof parsed.trainingReminderTime === "string" && /^(\d{2}):(\d{2})$/.test(parsed.trainingReminderTime) ? parsed.trainingReminderTime : initialData.trainingReminderTime,
       trainingReminderIds: Array.isArray(parsed.trainingReminderIds) ? parsed.trainingReminderIds.filter((id: any) => typeof id === "string") : []
     };
   } catch { return initialData; }
